@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+    <head>
+        <title>Narudzbenica</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+        <f:metadata>
+            <f:event listener="#{mbPrijava.daLiJeUlogovan}" type="preRenderView" />
+        </f:metadata>
+    </head>
+    <body>
+
+        <ui:composition template="/templejt.xhtml">
+            <ui:define name="top">
+                <h3>Forma za rad sa računima</h3>
+                
+            </ui:define>
+            <ui:define name="content">
+                <h:form id="forma" >
+                    <p:growl id="grwPoruke" />
+                    <p:panel header="Račun">  
+                        <h:panelGrid columns="2">
+
+                            <p:outputLabel value="Datum: " />
+                            <p:outputLabel value="#{currentDate}">
+                                <f:convertDateTime pattern="dd.MM.yyyy"></f:convertDateTime>
+                            </p:outputLabel>
+                            
+                            <p:outputLabel value="Ukupno:" />
+                            <p:inputText id="ukupno" value="#{mbNarudzbenica.narudzbenicaUnos.ukupnaVrednost}"  ></p:inputText>
+                            
+
+                        </h:panelGrid>
+
+                        <br/>
+                        <p:commandButton value="Sačuvaj račun" action="#{mbNarudzbenica.sacuvajNarudzbenicu()}"  update=":forma:grwPoruke" ajax="false" />
+
+                    </p:panel>
+
+                    <p:panel header="Stavke">
+                        <p:dataTable id="tblStavke" value="#{mbNarudzbenica.narudzbenicaUnos.stavkanarudzbeniceList}" var="stavka" >
+                           
+                            <p:column headerText="Redni broj">
+                                #{stavka.sifraStavke}
+                            </p:column>
+
+                            <p:column headerText="Proizvod">
+                                #{stavka.proizvod.naziv}
+                            </p:column>
+                            <p:column headerText="Kolicina">
+                                #{stavka.kolicina}
+                            </p:column>
+                            <p:column headerText="JM">
+                                #{stavka.jm}
+                            </p:column>
+
+                            <p:column headerText="Cena">
+                                <p:inputText value="#{stavka.cena}"  >
+                                </p:inputText>
+                            </p:column>
+                            <p:column headerText="Stopa pdv">
+                                <p:inputText value="#{stavka.stopaPDV}" />
+                            </p:column>
+                            <p:column headerText="Vrednost">
+                                <p:inputText value="#{stavka.vrednost}" />
+                            </p:column>
+                        </p:dataTable>
+                        <br/>
+                        <p:commandButton value="Obrisi stavku" action="#{mbNarudzbenica.obrisiStavku()}" update=":forma:tblStavke" process=":forma:tblStavke @this "/>
+
+                    </p:panel>
+
+
+                </h:form>
+
+            </ui:define>
+        </ui:composition>
+    </body>
+</html>

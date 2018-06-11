@@ -1,0 +1,91 @@
+<?xml version='1.0' encoding='UTF-8' ?> 
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+    <h:head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <h:outputStylesheet name="pozadina.css" library="css" />
+        <h:outputStylesheet name="/css/template.css"/>
+        <title>Facelets Template</title>
+        
+    </h:head>
+
+    <h:body>
+        <div id="top">
+
+            <h1>Aplikacija za upravljanje veleprodajom</h1>
+
+            <div id="log">
+                <h:form>
+                    <p:commandButton value="Izlogujte se" action="#{mbPrijava.odjaviRadnika()}" />
+                </h:form>
+            </div>
+            <br/><br/>
+            <h:form>
+                <p:menubar>
+                    <p:menuitem value="Početna" url="./index.xhtml" />
+                    <p:submenu label="Proizvod">
+                        <p:menuitem value="Unos novog proizvoda" url="./unosProizvoda.xhtml"  icon="ui-icon-circle-plus"/>
+                        <p:menuitem value="Izmena proizvoda" url="./prikazProizvoda.xhtml"  icon="ui-icon-circle-plus"/>
+                    </p:submenu>
+                    <p:submenu label="Račun">
+                        <p:menuitem value="Unos novog računa" url="./unosRacuna.xhtml" icon="ui-icon-circle-plus"/>
+                        <p:menuitem value="Pretraga računa" url="./prikazRacuna.xhtml" icon="ui-icon-circle-plus"/>
+                    </p:submenu>
+                    <p:submenu label="Narudžbenica">
+                        <p:menuitem value="Kreiranje narudžbenice" url="kreirajNarudzbenicu.xhtml" icon="ui-icon-circle-plus"/>
+                        <p:menuitem value="Prikaz narudžbenica" url="./prikazNarudzbenica.xhtml" icon="ui-icon-circle-plus"/>
+                    </p:submenu>
+                </p:menubar>
+            </h:form>  
+
+            <ui:insert name="top">TOP</ui:insert>
+        </div>
+        <div>
+            <div>
+                <div id="right">
+                    <ui:insert name="right">
+                        <p:panel header="Podaci o radniku">
+                            <p:panelGrid columns="2">
+                                <p:outputLabel value="Korisničko ime: " />
+                                <p:outputLabel value="#{mbPrijava.radnik.korisnickoIme}" />
+                                <p:outputLabel value="Ime: " />
+                                <p:outputLabel value="#{mbPrijava.radnik.ime}" />
+                                <p:outputLabel value="Prezime: " />
+                                <p:outputLabel value="#{mbPrijava.radnik.prezime}" />
+                            </p:panelGrid>
+                        </p:panel>
+                        <p:panel header="Dodatni podaci">
+                            <p:panelGrid columns="2">
+                                <p:outputLabel value="Datum: " />
+                                <p:outputLabel value="#{currentDate}">
+                                    <f:convertDateTime pattern="dd.MM.yyyy"></f:convertDateTime>
+                                </p:outputLabel>
+
+                                <p:outputLabel value="Vreme: " />
+                                <p:clock pattern="HH:mm:ss"></p:clock>
+                            </p:panelGrid>
+                        </p:panel>
+                        <p:panel header="Autor sajta">
+                            <p:outputLabel value="Nikola Matić" />
+                        </p:panel>
+                    </ui:insert>
+                </div>
+                <div id="content" class="right_content">
+                    <ui:insert name="content">Content</ui:insert>
+                </div>
+            </div>
+        </div>
+        <div id="bottom">
+            <ui:insert name="bottom">
+
+            </ui:insert>
+        </div>
+
+    </h:body>
+
+</html>

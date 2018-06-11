@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+    <head>
+        <title>Prikaz narudžbenica</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+        <f:metadata>
+            <f:event listener="#{mbPrijava.daLiJeUlogovan}" type="preRenderView" />
+        </f:metadata>
+    </head>
+    <body>
+        <ui:composition template="./templejt.xhtml">
+            <ui:define name="top">
+                <h3>Prikaz narudžbenica</h3>
+            </ui:define>
+
+            <ui:define name="content">
+                <h:form id="forma">
+                    <f:metadata>
+                        <f:event type="preRenderView" listener="#{mbNarudzbenica.onload()}"/>
+                    </f:metadata>
+                    <p:growl id="poruka" showDetail="true" sticky="true" autoUpdate="true" /> 
+
+                    <p:dataTable var="narudzbenica" value="#{mbNarudzbenica.sveNarudzbenice}" scrollable="true" scrollHeight="200" selectionMode="single" selection="#{mbNarudzbenica.narudzbenicaIzmena}" rowKey="#{narudzbenica.sifraNarudzbenice}"  lazy="false" widgetVar="tabela" stickyHeader="true" 
+                                 emptyMessage="Sistem ne može da nađe narudžbenice po zadatim vrednostima!" filteredValue="#{mbNarudzbenica.filterNarudzbenice}"> 
+
+                        <f:facet name="header">
+                            <p:outputPanel>
+                                <h:outputText value="Search all fields:" />
+                                <p:inputText id="globalFilter" onkeyup="PF('tabela').filter()" style="width:150px" placeholder="Enter keyword">
+                                    <p:ajax event="keyup"  listener="#{mbNarudzbenica.ispisi()}" />
+                                </p:inputText>
+
+                            </p:outputPanel>
+                        </f:facet>
+
+                        <p:column headerText="Šifra narudžbenice" filterBy="#{narudzbenica.sifraNarudzbenice}" filterMatchMode="contains">
+                            <h:outputText value="#{narudzbenica.sifraNarudzbenice}" />
+                        </p:column>
+
+                        <p:column headerText="Ukupna vrednost" filterMatchMode="contains" filterBy="#{narudzbenica.ukupnaVrednost}">
+                            <h:outputText value="#{narudzbenica.ukupnaVrednost}" />
+                        </p:column>
+
+
+                        <p:column headerText="Datum" >
+                            <h:outputText value="#{narudzbenica.datum}">    
+                                <f:convertDateTime pattern="dd.MM.yyyy" timeZone="Europe/Belgrade"/>
+                            </h:outputText>
+                        </p:column>
+                        <p:column headerText="Radnik" >
+                            <h:outputText value="#{narudzbenica.radnik.ime}"  />
+
+                        </p:column>
+                        <p:column headerText="Pravno lice" >
+                            <h:outputText value="#{narudzbenica.pravnoLice.nazivPravnogLica}"  />
+
+                        </p:column>
+
+                        <f:facet name="footer">
+                            <p:commandButton process="singleDT" update="@all" value="Obriši" action="#{mbNarudzbenica.obrisiNarudzbenicu()}" ajax="false"/>
+                            <p:commandButton process="singleDT" update="@all" value="Kreiraj račun" action="#{mbNarudzbenica.kreirajRacun()}" ajax="false"/>
+                        </f:facet>
+
+
+                    </p:dataTable>
+
+
+                </h:form>
+            </ui:define>
+        </ui:composition>
+    </body>
+</html>

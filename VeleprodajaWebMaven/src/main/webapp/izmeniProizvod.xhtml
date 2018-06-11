@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+    <head>
+        <title>Proizvod</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+        <f:metadata>
+            <f:event listener="#{mbPrijava.daLiJeUlogovan}" type="preRenderView" />
+        </f:metadata>
+    </head>
+    <body>
+
+        <ui:composition template="/templejt.xhtml">
+            <ui:define name="top">
+                <h3>Forma za rad sa proizvodima - izmena</h3>
+            </ui:define>
+            <ui:define name="content">
+                <h:form id="frmProizvod">
+                    <p:growl id="poruka" showDetail="true" sticky="true" autoUpdate="true" /> 
+                    <p:panel header="Proizvod">  
+                        <h:panelGrid columns="2">
+
+                            <p:outputLabel for="naziv" value="Naziv:" />
+                            <p:inputText id="naziv" value="#{mBProizvodi.proizvodIzmena.naziv}"  ></p:inputText>
+
+                            <p:outputLabel for="stanje" value="Stanje proizvoda:" />
+                            <p:inputText id="stanje" value="#{mBProizvodi.proizvodIzmena.stanje}"  ></p:inputText>
+
+                            <p:outputLabel for="cena" value="Cena:" />
+                            <p:inputText id="cena" value="#{mBProizvodi.proizvodIzmena.cena}"  ></p:inputText>
+
+                            <p:outputLabel for="opis" value="Opis:" />
+                            <p:inputText id="opis" value="#{mBProizvodi.proizvodIzmena.opis}"  ></p:inputText>
+
+                        </h:panelGrid>
+
+                        <br/>
+                        <p:commandButton value="Sačuvaj proizvod" action="#{mBProizvodi.izmeniProizvod()}" update=":frmProizvod:poruka" />
+
+                    </p:panel>
+                </h:form>
+
+            </ui:define>
+        </ui:composition>
+    </body>
+</html>

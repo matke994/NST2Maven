@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+    <head>
+        <title>Početna strana</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+        <f:metadata>
+            <f:event listener="#{mbPrijava.daLiJeUlogovan}" type="preRenderView" />
+        </f:metadata>
+    </head>
+    <body>
+        <ui:composition template="/templejt.xhtml">
+            <ui:define name="top">
+                <h3>Dobro došli na sajt za upravljanje veleprodajom.</h3>
+            </ui:define>
+
+            <ui:define name="content">
+                <p:growl id="poruka" showDetail="true" sticky="true" autoUpdate="true" /> 
+                <h5>Na ovom sajtu je moguće dodavati i menjati podatke o proizvodima, računima i narudžbenicama.</h5>
+
+                <p:panel header="Podaci o korisniku" style="width: 400px; height: 100; margin-left: 20px; margin-bottom: 20px;">
+                    <p:panelGrid columns="2">
+                        <p:outputLabel value="Korisničko ime: " />
+                        <p:outputLabel value="#{mbPrijava.radnik.korisnickoIme}" />
+                        <p:outputLabel value="Ime: " />
+                        <p:outputLabel value="#{mbPrijava.radnik.ime}" />
+                        <p:outputLabel value="Prezime: " />
+                        <p:outputLabel value="#{mbPrijava.radnik.prezime}" />
+                    </p:panelGrid>
+                </p:panel>
+            </ui:define>
+
+            <ui:define name="right">
+                <p:panel header="Dodatni podaci">
+                    <p:panelGrid columns="2">
+                        <p:outputLabel value="Datum: " />
+                        <p:outputLabel value="#{currentDate}">
+                            <f:convertDateTime pattern="dd.MM.yyyy"></f:convertDateTime>
+                        </p:outputLabel>
+
+                        <p:outputLabel value="Vreme: " />
+                        <p:clock pattern="HH:mm:ss"></p:clock>
+                    </p:panelGrid>
+                </p:panel>
+                <p:panel header="Autor sajta">
+                    <p:outputLabel value="Nikola Matić" />
+                </p:panel>
+            </ui:define>
+        </ui:composition>
+
+        <div>
+
+        </div>
+    </body>
+</html>

@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+    <head>
+        <title>Račun</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+        <f:metadata>
+            <f:event listener="#{mbPrijava.daLiJeUlogovan}" type="preRenderView" />
+            <f:event listener="#{mBProizvodi.pripremiFormu}" type="preRenderView" />
+        </f:metadata>
+    </head>
+    <body>
+
+        <ui:composition template="/templejt.xhtml">
+            <ui:define name="top">
+                <h3>Forma za rad sa računima</h3>
+            </ui:define>
+            <ui:define name="content">
+                <h:form id="forma" >
+                    <p:growl id="grwPoruke" />
+                    <p:panel header="Račun">  
+                        <h:panelGrid columns="2">
+
+                            <p:outputLabel value="Datum: " />
+                            <p:outputLabel value="#{currentDate}">
+                                <f:convertDateTime pattern="dd.MM.yyyy"></f:convertDateTime>
+                            </p:outputLabel>
+
+                            <p:outputLabel value="Ukupno:" />
+                            <p:inputText id="ukupno" value="#{mbRacun.racunUnos.ukupnaVrednost}" readonly="true" ></p:inputText>
+
+                        </h:panelGrid>
+
+                        <br/>
+                        <p:commandButton value="Sačuvaj račun" action="#{mbRacun.sacuvajRacun()}"  update=":forma:grwPoruke" ajax="false" />
+                        <p:commandButton process="singleDT" update="@all" value="Report" actionListener="#{mbRacun.PDF}" ajax="false"/>
+
+                    </p:panel>
+
+                    <p:panel header="Stavke">
+                        <p:dataTable id="tblStavke" value="#{mbRacun.racunUnos.stavkaracunaList}" var="stavka"  selectionMode="single" selection="#{mbRacun.izabranaStavka}" rowKey="#{stavka.proizvod.naziv}">
+                            <p:ajax event="cellEdit" process=":forma:tblStavke" update=":forma:tblStavke :forma:ukupno"/>
+                            <p:column headerText="Redni broj">
+                                #{stavka.sifraStavke}
+                            </p:column>
+
+                            <p:column headerText="Proizvod">
+                                #{stavka.proizvod.naziv}
+                            </p:column>
+                            <p:column headerText="Kolicina">
+                                #{stavka.kolicina}
+                            </p:column>
+                            <p:column headerText="JM">
+                                #{stavka.jm}
+                            </p:column>
+
+                            <p:column headerText="Cena">
+                                <p:inputText value="#{stavka.cena}"  >
+                                </p:inputText>
+                            </p:column>
+                            <p:column headerText="Stopa pdv">
+                                <p:inputText value="#{stavka.stopaPDV}" />
+                            </p:column>
+                            <p:column headerText="Vrednost">
+                                <p:inputText value="#{stavka.vrednostSaPDV}" />
+                            </p:column>
+                        </p:dataTable>
+                        <br/>
+                        <p:commandButton value="Obrisi stavku" action="#{mbRacun.obrisiStavku()}" update=":forma:tblStavke" process=":forma:tblStavke @this "/>
+
+                    </p:panel>
+                    <p:panel id="unosStavke" header="Unos stavke">
+
+                        <p:dataTable var="proizvod" id="tblProizvod" value="#{mBProizvodi.sviProizvodi}" scrollable="true" scrollHeight="200" selectionMode="single" selection="#{mbRacun.izabranaStavka.proizvod}"
+                                     rowKey="#{proizvod.proizvodID}"  lazy="false" widgetVar="tabela" stickyHeader="true" emptyMessage="Trazenim kreterijumom nije pronađeno ništa!" filteredValue="#{mBProizvodi.filterProizvodi}">
+                            <p:ajax event="rowSelect" process="@this" update=":forma:pnlgProizvod" />
+                            <f:facet name="header">
+                                <p:outputPanel>
+                                    <h:outputText value="Search all fields:" />
+                                    <p:inputText id="globalFilter" onkeyup="PF('tabela').filter()" style="width:150px" placeholder="Enter keyword">
+                                        <p:ajax event="keyup"  listener="#{mBProizvodi.ispisi()}" />
+                                    </p:inputText>
+
+                                </p:outputPanel>
+                            </f:facet>
+
+
+                            <p:column headerText="ProizvodID" filterBy="#{proizvod.proizvodID}" filterMatchMode="contains">
+                                <h:outputText value="#{proizvod.proizvodID}" />
+                            </p:column>
+
+                            <p:column headerText="Naziv">
+                                <h:outputText value="#{proizvod.naziv}" />
+                            </p:column>
+
+                            <p:column headerText="Cena" >
+                                <h:outputText value="#{proizvod.cena}" />
+                            </p:column>
+                            <p:column headerText="Stanje" >
+                                <h:outputText value="#{proizvod.stanje}" />
+                            </p:column>
+                            <p:column headerText="Stopa PDV" >
+                                <h:outputText value="#{proizvod.stopaPDV.iznos}" />
+                            </p:column>
+                            <p:column headerText="Opis" >
+                                <h:outputText value="#{proizvod.opis}" />
+                            </p:column>
+
+                        </p:dataTable>
+                        <br/>
+                        <p:panelGrid id="pnlgProizvod" columns="2">
+                            <p:outputLabel value="ProizvodID:" />
+                            <p:inputText id="proizvodID" value="#{mbRacun.izabranaStavka.proizvod.proizvodID}" readonly="true" ></p:inputText>
+                            <p:outputLabel value="Naziv:" />
+                            <p:inputText id="naziv" value="#{mbRacun.izabranaStavka.proizvod.naziv}" readonly="true"></p:inputText>
+                            <p:outputLabel value="Cena:" />
+                            <p:inputText id="cena" value="#{mbRacun.izabranaStavka.proizvod.cena}" readonly="true"></p:inputText>
+                            <p:outputLabel value="Stopa PDV:" />
+                            <p:inputText id="stopaPDV" value="#{mbRacun.izabranaStavka.proizvod.stopaPDV.iznos}" readonly="true"></p:inputText>
+                            <p:outputLabel value="Vrednost:" />
+                            <p:inputText id="vrednost" value="#{mbRacun.izabranaStavka.proizvod.cena*(100 +  mbRacun.izabranaStavka.proizvod.stopaPDV.iznos)/100}" readonly="true"></p:inputText>
+
+
+                            <p:outputLabel for="jedinicaMere" value="JM" />
+                            <p:selectOneMenu id="jedinicaMere" value="#{mbRacun.izabranaStavka.jm}" style="width:150px" >
+                                <f:selectItems var="jm" value="#{mbRacun.jediniceMere}" itemValue="#{jm}" itemLabel="#{jm}" />
+                            </p:selectOneMenu>
+
+
+
+
+
+                            <p:outputLabel for="kol" value="Količina:" />
+                            <p:spinner id="kol" value="#{mbRacun.izabranaStavka.kolicina}" min="0" max="500" ></p:spinner>
+
+                        </p:panelGrid>
+                        <br/>
+                        <p:commandButton value="Dodaj stavku" process=":forma:pnlgProizvod @this"  update=":forma:tblStavke :forma:ukupno" action="#{mbRacun.dodajStavku()}"  />
+                    </p:panel>
+
+
+                </h:form>
+
+            </ui:define>
+        </ui:composition>
+    </body>
+</html>

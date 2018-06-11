@@ -1,0 +1,38 @@
+/*
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+*/
+/* 
+    Created on : Aug 24, 2017, 3:05:38 PM
+    Author     : Ivan
+*/
+
+.log {
+    margin: auto;
+}
+
+.logPanel {
+    width:500px;
+    height:170px;
+    position:absolute;
+    left:50%; 
+    top:50%; 
+    margin-left:-250px; 
+    margin-top:-250px;
+}
+
+.regPanel {
+    width:500px;
+    height:300px;
+    position:absolute;
+    left:50%; 
+    top:50%; 
+    margin-left:-250px; 
+    margin-top:-250px;
+}
+
+.log.ui-panelgrid>*>tr,
+.log.ui-panelgrid .ui-panelgrid-cell {
+    border: none;
+}

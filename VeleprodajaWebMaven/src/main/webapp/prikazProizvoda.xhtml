@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+    <head>
+        <title>Prikaz proizvoda</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+        <f:metadata>
+            <f:event listener="#{mbPrijava.daLiJeUlogovan}" type="preRenderView" />
+        </f:metadata>
+    </head>
+    <body>
+        <ui:composition template="./templejt.xhtml">
+            <ui:define name="top">
+                <h3>Prikaz proizvoda</h3>
+            </ui:define>
+
+            <ui:define name="content">
+                <h:form id="forma">
+                    <f:metadata>
+                        <f:event type="preRenderView" listener="#{mBProizvodi.onload()}"/>
+                    </f:metadata>
+                    <p:growl id="poruka" showDetail="true" sticky="true" autoUpdate="true" /> 
+
+                    <p:dataTable var="proizvod" value="#{mBProizvodi.sviProizvodi}" scrollable="true" scrollHeight="200" selectionMode="single" selection="#{mBProizvodi.proizvodIzmena}" rowKey="#{proizvod.proizvodID}"  lazy="false" widgetVar="tabela" stickyHeader="true" 
+                                 emptyMessage="Sistem ne može da nađe proizvode po zadatim vrednostima!" filteredValue="#{mBProizvodi.filterProizvodi}"> 
+
+                        <f:facet name="header">
+                            <p:outputPanel>
+                                <h:outputText value="Search all fields:" />
+                                <p:inputText id="globalFilter" onkeyup="PF('tabela').filter()" style="width:150px" placeholder="Enter keyword">
+                                    <p:ajax event="keyup"  listener="#{mBProizvodi.ispisi()}" />
+                                </p:inputText>
+
+                            </p:outputPanel>
+                        </f:facet>
+
+                        <p:column headerText="ProizvodID" filterBy="#{proizvod.proizvodID}" filterMatchMode="contains">
+                            <h:outputText value="#{proizvod.proizvodID}" />
+                        </p:column>
+
+                        <p:column headerText="Naziv" filterMatchMode="contains" filterBy="#{proizvod.naziv}">
+                            <h:outputText value="#{proizvod.naziv}" />
+                        </p:column>
+
+
+                        <p:column headerText="Cena" >
+                            <h:outputText value="#{proizvod.cena}" />
+                        </p:column>
+                        <p:column headerText="Stanje" >
+                            <h:outputText value="#{proizvod.stanje}" />
+                        </p:column>
+                        <p:column headerText="Stopa PDV" >
+                            <h:outputText value="#{proizvod.stopaPDV.iznos}" />
+                        </p:column>
+                        <p:column headerText="Opis" >
+                            <h:outputText value="#{proizvod.opis}" />
+                        </p:column>
+
+                        <f:facet name="footer">
+                            <p:commandButton process="singleDT" update="@all" value="Izmeni" action="#{mBProizvodi.prikaziProizvod()}" ajax="false"/>
+                            <p:commandButton process="singleDT" update="@all" value="Obriši" action="#{mBProizvodi.izbrisiProizvod()}" ajax="false"/>
+                            <p:commandButton process="singleDT" update="@all" value="Report" actionListener="#{mBProizvodi.PDF}" ajax="false"/>
+                        </f:facet>
+
+
+                    </p:dataTable>
+
+
+                </h:form>
+            </ui:define>
+        </ui:composition>
+    </body>
+</html>
